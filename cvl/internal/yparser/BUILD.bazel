@@ -10,7 +10,6 @@ go_library(
         "@com_github_cesnet_libyang//:libyang",
     ],
     cgo = True,
-    clinkopts = ["-lyang"],
     importpath = "github.com/Azure/sonic-mgmt-common/cvl/internal/yparser",
     visibility = ["//cvl:__subpackages__"],
     deps = ["//cvl/internal/util"],

@@ -1,0 +1,7 @@
+package(default_visibility = ["//visibility:public"])
+
+# Export test configuration files for use by go_test rules
+exports_files([
+    "database_config.json",
+    "platform.json",
+])

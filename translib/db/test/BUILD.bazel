@@ -1,59 +1,25 @@
-load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library", "go_test")
+load("@io_bazel_rules_go//go:def.bzl", "go_test")
+
+# NOTE: These are manual integration tests that require a running Redis instance.
+# They use package main with main() instead of Test* functions, so they report
+# "no tests to run" but are kept for manual developer testing.
+# Run individually with: bazel test //translib/db/test:testdb_test --test_tag_filters=
 
 go_test(
     name = "arloIssue29_test",
     srcs = ["arloIssue29.go"],
-    visibility = ["//visibility:private"],
-    deps = [
-        "//translib/db",
-        "//translib/tlerr",
-        "@com_github_golang_glog//:go_default_library",
+    data = [
+        "//tools/test:database_config.json",
+        "//cvl/conf:cvl_cfg.json",
     ],
-)
-
-go_test(
-    name = "testdb_test",
-    srcs = ["testdb.go"],
-    visibility = ["//visibility:private"],
-    deps = [
-        "//translib/db",
-        "//translib/tlerr",
-        "@com_github_golang_glog//:go_default_library",
-    ],
-)
-
-go_test(
-    name = "testmap_test",
-    srcs = ["testmap.go"],
-    visibility = ["//visibility:private"],
-    deps = [
-        "//translib/db",
-        "//translib/tlerr",
-        "@com_github_golang_glog//:go_default_library",
-    ],
-)
-
-go_test(
-    name = "testsubscribe_test",
-    srcs = ["testsubscribe.go"],
-    visibility = ["//visibility:private"],
-    deps = [
-        "//translib/db",
-        "//translib/tlerr",
-        "@com_github_golang_glog//:go_default_library",
-    ],
-)
-
-go_library(
-    name = "test_lib",
-    srcs = [
-        "arloIssue29.go",
-        "testdb.go",
-        "testmap.go",
-        "testsubscribe.go",
-    ],
-    importpath = "github.com/Azure/sonic-mgmt-common/translib/db/test",
-    visibility = ["//visibility:private"],
+    # Set DB_CONFIG_PATH to point to the config file in runfiles
+    env = {
+        "DB_CONFIG_PATH": "tools/test/database_config.json",
+    },
+    # Run from the runfiles root so relative paths work
+    rundir = ".",
+    tags = ["manual"],
+    visibility = ["//visibility:public"],
     deps = [
         "//translib/db",
         "//translib/tlerr",
@@ -61,8 +27,68 @@ go_library(
     ],
 )
 
-go_binary(
-    name = "test",
-    embed = [":test_lib"],
+go_test(
+    name = "testdb_test",
+    srcs = ["testdb.go"],
+    data = [
+        "//tools/test:database_config.json",
+        "//cvl/conf:cvl_cfg.json",
+    ],
+    # Set DB_CONFIG_PATH to point to the config file in runfiles
+    env = {
+        "DB_CONFIG_PATH": "tools/test/database_config.json",
+    },
+    # Run from the runfiles root so relative paths work
+    rundir = ".",
+    tags = ["manual"],
     visibility = ["//visibility:public"],
+    deps = [
+        "//translib/db",
+        "//translib/tlerr",
+        "@com_github_golang_glog//:glog",
+    ],
+)
+
+go_test(
+    name = "testmap_test",
+    srcs = ["testmap.go"],
+    data = [
+        "//tools/test:database_config.json",
+        "//cvl/conf:cvl_cfg.json",
+    ],
+    # Set DB_CONFIG_PATH to point to the config file in runfiles
+    env = {
+        "DB_CONFIG_PATH": "tools/test/database_config.json",
+    },
+    # Run from the runfiles root so relative paths work
+    rundir = ".",
+    tags = ["manual"],
+    visibility = ["//visibility:public"],
+    deps = [
+        "//translib/db",
+        "//translib/tlerr",
+        "@com_github_golang_glog//:glog",
+    ],
+)
+
+go_test(
+    name = "testsubscribe_test",
+    srcs = ["testsubscribe.go"],
+    data = [
+        "//tools/test:database_config.json",
+        "//cvl/conf:cvl_cfg.json",
+    ],
+    # Set DB_CONFIG_PATH to point to the config file in runfiles
+    env = {
+        "DB_CONFIG_PATH": "tools/test/database_config.json",
+    },
+    # Run from the runfiles root so relative paths work
+    rundir = ".",
+    tags = ["manual"],
+    visibility = ["//visibility:public"],
+    deps = [
+        "//translib/db",
+        "//translib/tlerr",
+        "@com_github_golang_glog//:glog",
+    ],
 )

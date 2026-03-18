@@ -16,13 +16,24 @@ go_library(
     ],
 )
 
+# Integration test requiring SONiC platform infrastructure (/usr/share/sonic/hwsku/platform.json).
+# Run with: bazel test //translib/platform:platform_test --test_tag_filters=
 go_test(
     name = "platform_test",
     srcs = [
         "platform_test.go",
     ],
-    data = glob(["testdata/**"]),
+    data = [
+        "//tools/test:database_config.json",
+        "//cvl/conf:cvl_cfg.json",
+    ],
     embed = [":platform"],
+    env = {
+        "DB_CONFIG_PATH": "tools/test/database_config.json",
+        "CVL_CFG_FILE": "cvl/conf/cvl_cfg.json",
+    },
+    rundir = ".",
+    tags = ["manual"],
     visibility = ["//visibility:public"],
     deps = [
         "//translib",

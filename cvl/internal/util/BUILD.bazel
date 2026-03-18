@@ -10,13 +10,12 @@ go_library(
         "@com_github_cesnet_libyang//:libyang",
     ],
     cgo = True,
-    clinkopts = ["-lyang"],
     importpath = "github.com/Azure/sonic-mgmt-common/cvl/internal/util",
     visibility = ["//cvl:__subpackages__"],
     deps = [
         "//translib/log",
-        "@com_github_redis_go_redis_v9//:go-redis",
         "@com_github_golang_glog//:glog",
+        "@com_github_redis_go_redis_v9//:go-redis",
         "@com_github_workiva_go_datastructures//set",
     ],
 )

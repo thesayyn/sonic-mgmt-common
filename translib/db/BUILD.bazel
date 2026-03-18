@@ -40,9 +40,9 @@ go_library(
         "//cvl/common",
         "//translib/log",
         "//translib/tlerr",
-        "@com_github_redis_go_redis_v9//:go-redis",
         "@com_github_golang_glog//:glog",
         "@com_github_kylelemons_godebug//pretty",
+        "@com_github_redis_go_redis_v9//:go-redis",
     ],
 )
 
@@ -68,7 +68,21 @@ go_test(
         "db_test.go",
         "db_value_test.go",
     ],
+    data = [
+        "//tools/test:database_config.json",
+        "//cvl/conf:cvl_cfg.json",
+    ],
     embed = [":db"],
+    # Set DB_CONFIG_PATH to point to the config file in runfiles
+    env = {
+        "DB_CONFIG_PATH": "tools/test/database_config.json",
+        "CVL_CFG_FILE": "cvl/conf/cvl_cfg.json",
+    },
+    # Run from the runfiles root so relative paths work
+    rundir = ".",
+    # Integration test requiring running Redis instance on localhost:6379.
+    # Run with: bazel test //translib/db:db_test --test_tag_filters=
+    tags = ["manual"],
     visibility = ["//visibility:public"],
     deps = [
         "//translib/tlerr",
