@@ -1,3 +1,4 @@
+load("@bazel_lib//lib:copy_to_directory.bzl", "copy_to_directory")
 load("@gazelle//:def.bzl", "gazelle")
 
 exports_files(["go_repos.bzl"])
